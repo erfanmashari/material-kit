@@ -11,27 +11,27 @@ import AppPostsTableItem from "./AppPostsTableItem"
 
 export default function AppPostsTable() {
     const [posts, setPosts] = useState([]);
+    const [deletedList, setDeletedList] = useState([]);
 
     useEffect(() => {
         fetch("https://jsonplaceholder.typicode.com/posts").then(response => {
-                return response.json();
+            return response.json();
         }).then(res => {
             setPosts(res.splice(0, 20));
         })
     }, []);
 
-    const deletePost = async (index) => {
-        await fetch(`https://jsonplaceholder.typicode.com/posts/${index + 1}`, {
+    const deletePost = async (id) => {
+        await fetch(`https://jsonplaceholder.typicode.com/posts/${id}`, {
             method: 'DELETE',
         });
-        console.log(index)
-        console.log(posts)
-        const newPosts = [...posts];
-        console.log(newPosts)
-        newPosts.splice(index, 1)
-        console.log(newPosts)
-        setPosts(newPosts)
+
+        const newDeletedList = [...deletedList];
+        newDeletedList.push(id);
+        setDeletedList(newDeletedList);
     }
+
+    let postIndex = 0;
 
     return (
         <TableContainer component={Paper}>
@@ -46,9 +46,12 @@ export default function AppPostsTable() {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {posts.map((post, index) => (
-                        <AppPostsTableItem key={index} index={index} postItem={post} deletePost={deletePost} />
-                    ))}
+                    {posts.map((post, index) => {
+                        if (!deletedList.includes(post.id)) {
+                            postIndex += 1;
+                        }
+                        return !deletedList.includes(post.id) ? <AppPostsTableItem key={index} index={postIndex} postItem={post} deletePost={deletePost} /> : ""
+                    })}
                 </TableBody>
             </Table>
         </TableContainer>

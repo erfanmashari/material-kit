@@ -45,7 +45,7 @@ export default function AppPostsTableItem({ postItem, index, deletePost }) {
             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
         >
             <TableCell align="center" component="th" scope="row">
-                {index + 1}
+                {index}
             </TableCell>
             <TableCell align="center">{isEditing ? <TextField value={post.title} onChange={e => changeFormFields("title", e.target.value)} /> : post.title}</TableCell>
             <TableCell align="center">{isEditing ? <TextField value={post.body} onChange={e => changeFormFields("body", e.target.value)} /> : post.body}</TableCell>
@@ -55,7 +55,7 @@ export default function AppPostsTableItem({ postItem, index, deletePost }) {
                 </span>
             </TableCell>
             <TableCell align="right">
-                <span role="presentation" onClick={() => deletePost(index)} className="material-symbols-outlined" style={{ cursor: "pointer" }}>
+                <span role="presentation" onClick={() => deletePost(post.id)} className="material-symbols-outlined" style={{ cursor: "pointer" }}>
                     delete
                 </span>
             </TableCell>
