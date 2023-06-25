@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import { BrowserRouter } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
@@ -18,8 +18,14 @@ export default function App() {
   // state for rtl status of page
   const [isRTL, setIsRTL] = useState(false);
 
+  const rtl = localStorage.getItem("rtl")
+
   // state for auth status for context
   const [authenticated, setAuthenticated] = useState(false);
+
+  useEffect(() => {
+    setIsRTL(rtl === true || rtl === "true")
+  }, [])
 
   return (
     <div dir={isRTL ? 'rtl' : 'ltr'}>

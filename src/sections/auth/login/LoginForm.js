@@ -22,17 +22,25 @@ export default function LoginForm() {
 
   const [showPassword, setShowPassword] = useState(false);
   const [alert, setAlert] = useState(false);
+  const [success, setSuccess] = useState(false);
 
   const authContext = useContext(AuthContext)
 
   const handleClick = () => {
     if (formFields.email === "abc@gmail.com" && formFields.password === "123456") {
-      if (formFields.remember) {
-        localStorage.setItem("authenticated", true);
-      }
 
-      authContext.setAuthenticated(true);
-      navigate('/dashboard', { replace: true });
+      setSuccess(true);
+
+      setTimeout(() => {
+        setSuccess(false)
+        if (formFields.remember) {
+          localStorage.setItem("authenticated", true);
+        }
+
+        authContext.setAuthenticated(true);
+        navigate('/dashboard', { replace: true });
+      }, 3000);
+
     } else {
       localStorage.setItem("authenticated", false);
       setAlert(true);
@@ -54,6 +62,7 @@ export default function LoginForm() {
   return (
     <>
       {alert ? <Alert severity="error">ایمیل یا رمز عبور اشتباه است!</Alert> : ""}
+      {success ? <Alert severity="success">ورود با موفقیت انجام شد!</Alert> : ""}
       <Stack spacing={3}>
         <TextField name="email" label="Email address" value={formFields.email} onChange={e => changeFormFields("email", e.target.value)} />
 

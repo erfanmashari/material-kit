@@ -47,6 +47,13 @@ export default function Nav({ openNav, onCloseNav, setIsRTL }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
 
+  const changeDirection = (checked) => {
+    setIsRTL(checked);
+    localStorage.setItem("rtl", checked)
+  }
+
+  const rtl = localStorage.getItem("rtl")
+
   const renderContent = (
     <Scrollbar
       sx={{
@@ -76,7 +83,7 @@ export default function Nav({ openNav, onCloseNav, setIsRTL }) {
         </Link>
       </Box>
 
-      <Box sx={{
+      <Box dir={"ltr"} sx={{
         width:  "100%",
         display: "flex",
         flexDirection: "row",
@@ -86,7 +93,7 @@ export default function Nav({ openNav, onCloseNav, setIsRTL }) {
         my: 1,
       }}>
         LTR
-        <Switch onChange={e => setIsRTL(e.target.checked)} />
+        <Switch checked={rtl === true || rtl === "true"} onChange={e => changeDirection(e.target.checked)} />
         RTL
       </Box>
 
@@ -137,6 +144,8 @@ export default function Nav({ openNav, onCloseNav, setIsRTL }) {
               width: NAV_WIDTH,
               bgcolor: 'background.default',
               borderRightStyle: 'dashed',
+              left: rtl === true || rtl === "true" ? "unset" : 0,
+              right: rtl === true || rtl === "true" ? 0 : "unset",
             },
           }}
         >

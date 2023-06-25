@@ -43,8 +43,13 @@ Header.propTypes = {
 };
 
 export default function Header({ onOpenNav }) {
+  const rtl = localStorage.getItem("rtl")
+
   return (
-    <StyledRoot>
+    <StyledRoot sx={{
+      left: rtl === true || rtl === "true" ? 0 : "unset",
+      right: rtl === true || rtl === "true" ? "unset" : 0,
+    }}>
       <StyledToolbar>
         <IconButton
           onClick={onOpenNav}
