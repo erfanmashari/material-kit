@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -12,23 +12,14 @@ import AppPostsTableItem from "./AppPostsTableItem"
 
 export default function AppPostsTable() {
     const [page, setPage] = useState(0);
-    const posts = useRef([]);
-    // let postsList = [];
+    const [posts, setPosts] = useState([]);
     const [deletedList, setDeletedList] = useState([]);
 
     useEffect(() => {
         fetch("https://jsonplaceholder.typicode.com/posts").then(response => {
             return response.json();
         }).then(res => {
-            const newPosts = [];
-            res.forEach((post, i) => {
-                if (i >= page * 10 && i < (page + 1) * 10) {
-                    newPosts.push(post)
-                }
-            });
-            console.log(newPosts)
-            // postsList = newPosts;
-            posts.current = newPosts
+            setPosts(res.splice(0, 20));
         })
     }, [page]);
 
@@ -44,7 +35,7 @@ export default function AppPostsTable() {
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
-    };
+      };
 
     let postIndex = 0;
 
@@ -63,11 +54,11 @@ export default function AppPostsTable() {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {posts.current.map((post, index) => {
+                        {posts.map((post, index) => {
                             if (!deletedList.includes(post.id)) {
                                 postIndex += 1;
                             }
-                            return !deletedList.includes(post.id) ? <AppPostsTableItem key={index} index={postIndex} postItem={post} deletePost={deletePost} /> : ""
+                            return !deletedList.includes(post.id) && postIndex > page * 10 && postIndex <= (page + 1) * 10 ? <AppPostsTableItem key={index} index={postIndex} postItem={post} deletePost={deletePost} /> : ""
                         })}
                     </TableBody>
                 </Table>
@@ -75,13 +66,13 @@ export default function AppPostsTable() {
             <TablePagination
                 rowsPerPageOptions={[10]}
                 component="div"
-                count={20}
+                count={20 - deletedList.length}
                 rowsPerPage={10}
                 page={page}
                 onPageChange={handleChangePage}
             />
-        </Paper>
-    )
+            </Paper>
+            )
 }
 // import * as React from 'react';
 // import Table from '@mui/material/Table';
